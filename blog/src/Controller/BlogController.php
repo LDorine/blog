@@ -13,8 +13,9 @@ class BlogController extends AbstractController
 {
     /**
      * @Route("/blog", name="index")
+     * @return Response
      */
-    public function index()
+    public function index() : Response
     {
         return $this->render('blog/index.html.twig', [
             'owner' => 'Thomas',
@@ -24,9 +25,9 @@ class BlogController extends AbstractController
     /**
      * @Route("/blog/show/{slug}", name="show",requirements={"slug"="^[a-z0-9]+(?:-[a-z0-9]+)*$"})
      * @param $slug
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function show($slug = 'article-sans-titre')
+    public function show($slug = 'article-sans-titre') : Response
     {
         $title = str_replace('-',' ',$slug);
         $title = ucwords($title);
