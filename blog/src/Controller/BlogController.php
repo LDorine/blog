@@ -26,11 +26,8 @@ class BlogController extends AbstractController
      * @param $slug
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function show($slug)
+    public function show($slug = 'article-sans-titre')
     {
-        if($slug === "affiche") {
-            $slug = 'article-sans-titre';
-        }
         $title = str_replace('-',' ',$slug);
         $title = ucwords($title);
         return $this->render('blog/show.html.twig', [
