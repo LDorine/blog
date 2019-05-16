@@ -6,11 +6,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-
+/**
+ * @Route(name="blog_")
+ */
 class BlogController extends AbstractController
 {
     /**
-     * @Route("/blog", name="blog_index")
+     * @Route("/blog", name="index")
      * @return Response
      */
     public function index() : Response
@@ -21,11 +23,15 @@ class BlogController extends AbstractController
     }
 
     /**
-     * @Route("/blog/show/{slug}", name="blog_show",requirements={"slug"="^[a-z0-9]+(?:-[a-z0-9]+)*$"})
+     * @Route("/blog/show/{slug}",
+     *     name="show",
+     *     requirements={"slug"="^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+     *    defaults={"slug"="Article Sans Titre"},
+     *     )
      * @param $slug
      * @return Response
      */
-    public function show($slug = 'article-sans-titre') : Response
+    public function show(string $slug) : Response
     {
         $title = str_replace('-',' ',$slug);
         $title = ucwords($title);
