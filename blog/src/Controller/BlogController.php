@@ -33,9 +33,8 @@ class BlogController extends AbstractController
     }
 
     /**
-     * @Route("/show/{slug}",
+     * @Route("/blog/show/{slug<^[a-z0-9-]+$>}",
      *     name="blog_show",
-     *     requirements={"slug"="^[a-z0-9-]+$"},
      *     defaults={"slug" = null}
      *     )
      * @param $slug
@@ -66,21 +65,21 @@ class BlogController extends AbstractController
         return $this->render(
             'blog/show.html.twig',
             [
-                'article' => $article,
-                'slug' => $slug,
+                'articles' => $article
             ]
         );
     }
 
     /**
-     * @Route("/category/{categoryName}",
+     * @Route("/blog/category/{categoryName}",
      *     name="show_category"
-     *  )
+     *      )
      * @param string $categoryName
      * @return Response
      */
     public function showByCategory(string $categoryName) : Response
     {
+        /*
         $category = $this->getDoctrine()
             ->getRepository(Category::class)
             ->findOneBy(['name' => $categoryName]);
@@ -88,6 +87,19 @@ class BlogController extends AbstractController
         $article = $this->getDoctrine()
             ->getRepository(Article::class)
             ->findBy(['category' => $category],['id' => 'DESC'], 3);
+
+        if (!$category) {
+            throw $this->createNotFoundException(
+                'No category found in category table.'
+            );
+        }
+        */
+
+        $category = $this->getDoctrine()
+            ->getRepository(Category::class)
+            ->findOneBy(['name' => $categoryName]);
+
+        $article = $category->getArticles();
 
         if (!$category) {
             throw $this->createNotFoundException(
