@@ -15,22 +15,38 @@ class BlogController extends AbstractController
 {
     /**
      * @Route("/blog", name="blog_index")
+     * @param Request $request
      * @return Response
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $articles = $this->getDoctrine()
-            ->getRepository(Article::class)
-            ->findAll();
+        $form = $this->createForm(ArticleSearchType::class);
+        $form->handleRequest($request);
 
-        if (!$articles) {
-            throw $this->createNotFoundException(
-                'No article found in article\'s table.'
-            );
+        if ($form->isSubmitted()) {
+            $data = $form->getData();
+            // $data contient les données du $_POST
+            // Faire une recherche dans la BDD avec les infos de $data...
+            $articles = $this->getDoctrine()
+                ->getRepository(Article::class)
+                ->findBy(['title' => $data]);
+
+            if (!$articles) {
+                throw $this->createNotFoundException(
+                    'No article found in article\'s table.'
+                );
+            }
+        } else {
+            $articles = $this->getDoctrine()
+                ->getRepository(Article::class)
+                ->findAll();
+
+            if (!$articles) {
+                throw $this->createNotFoundException(
+                    'No article found in article\'s table.'
+                );
+            }
         }
-
-        $category = new Category();
-        $form = $this->createForm(CategoryType::class, $category);
 
         return $this->render(
             'blog/index.html.twig',
