@@ -3,7 +3,14 @@
 {% block title %} success page {% endblock %}
 
 {% block body %}
-    <h1>Success !</h1>
+    <h2>Success !</h2>
+    {% for category in categories %}
+        <div>
+            <h2>{{ category.id }} - Category name : {{ category.name }}</h2>
+        </div>
+    {% else %}
+        Aucune catégorie trouvé.
+    {% endfor %}
     <a href="{{ path('app_index') }}">
         Back to homepage.
     </a>

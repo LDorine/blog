@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Article;
 use App\Entity\Category;
 use App\Form\CategoryType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,7 +26,14 @@ class CategoryController extends AbstractController
             $insert = $this->getDoctrine()->getManager();
             $insert->persist($data);
             $insert->flush();
-            return $this->render('blog/success.html.twig');
+
+            $categories = $this->getDoctrine()
+                ->getRepository(Category::class)
+                ->findAll();
+            return $this->render(
+                'blog/success.html.twig',
+                ['categories' => $categories]
+            );
         } else {
             return $this->render(
                 'blog/form.html.twig',
