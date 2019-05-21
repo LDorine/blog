@@ -29,11 +29,8 @@ class BlogController extends AbstractController
             );
         }
 
-        $form = $this->createForm(
-            ArticleSearchType::class,
-            null,
-            ['method' => Request::METHOD_GET]
-        );
+        $category = new Category();
+        $form = $this->createForm(CategoryType::class, $category);
 
         return $this->render(
             'blog/index.html.twig',
