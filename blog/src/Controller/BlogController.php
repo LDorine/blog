@@ -2,10 +2,11 @@
 // src/Controller/BlogController.php
 namespace App\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use  App\Entity\Article;
+use App\Entity\Article;
 use App\Entity\Category;
 
 class BlogController extends AbstractController
@@ -71,45 +72,19 @@ class BlogController extends AbstractController
     }
 
     /**
-     * @Route("/blog/category/{categoryName}",
+     * @Route("/blog/category/{name}",
      *     name="show_category"
      *      )
-     * @param string $categoryName
+     * @param Category $categoryName
      * @return Response
      */
-    public function showByCategory(string $categoryName) : Response
+    public function showByCategory(Category $categoryName) : Response
     {
-        /*
-        $category = $this->getDoctrine()
-            ->getRepository(Category::class)
-            ->findOneBy(['name' => $categoryName]);
-
-        $article = $this->getDoctrine()
-            ->getRepository(Article::class)
-            ->findBy(['category' => $category],['id' => 'DESC'], 3);
-
-        if (!$category) {
-            throw $this->createNotFoundException(
-                'No category found in category table.'
-            );
-        }
-        */
-
-        $category = $this->getDoctrine()
-            ->getRepository(Category::class)
-            ->findOneBy(['name' => $categoryName]);
-
-        $article = $category->getArticles();
-
-        if (!$category) {
-            throw $this->createNotFoundException(
-                'No category found in category table.'
-            );
-        }
+        $articles = $categoryName->getArticles();
 
         return $this->render(
             'blog/category.html.twig',
-            ['articles' => $article, 'category' => $categoryName]
+            ['articles' => $articles, 'category' => $categoryName->getName()]
         );
     }
 
