@@ -9,7 +9,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Article;
 use App\Entity\Category;
 use App\Form\ArticleSearchType;
-use App\Form\CategoryType;
 
 class BlogController extends AbstractController
 {
