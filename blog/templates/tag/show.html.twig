@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tag{% endblock %}
+
+{% block body %}
+<h2>Tag : {{ tag.name }}</h2>
+    {% for article in tag.articles %}
+            <p>{{ article.title }}</p>
+    {% else %}
+        Aucun article trouvé.
+    {% endfor %}
+    <a href="{{ path('app_index') }}">
+        Back to homepage.
+    </a>
+{% endblock %}
