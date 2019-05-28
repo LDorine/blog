@@ -18,12 +18,13 @@ class ArticleFixtures extends Fixture implements DependentFixtureInterface
             $article = new Article();
             $article->setTitle(mb_strtolower($faker->sentence()));
             $article->setContent($faker->text);
-            $article->setCategory($this->getReference('categorie_0'));
+            $article->setCategory($this->getReference('categorie_'.$faker->numberBetween($min = 0, $max = 5)));
             $manager->persist($article);
         }
 
         $manager->flush();
     }
+
     public function getDependencies()
     {
         return [CategoryFixtures::class];

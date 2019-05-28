@@ -12,7 +12,7 @@ class CategoryFixtures extends Fixture
 {
     private const CATEGORIES = ['PHP','Java','Javascript','Ruby','DevOps','C'];
 
-    function load(ObjectManager $manager)
+    public function load(ObjectManager $manager)
     {
         foreach (self::CATEGORIES as $key => $categoryName) {
             $category = new Category();
