@@ -1,3 +1,9 @@
 <nav class="navbar navbar-light bg-light">
     <a class="navbar-brand" href="/">blog</a>
+    {% if app.user %}
+        Bonjour {{ app.user.email }} !
+        <a href="{{ path('app_logout') }}"> Se déconnecter</a>
+    {% else %}
+        <a href="{{ path('app_login') }}"> Se connecter</a>
+    {% endif %}
 </nav>
