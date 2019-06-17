@@ -34,7 +34,7 @@ class Article
      * @Assert\Regex(
      *     pattern="/digital/",
      *     match=false,
-     *     message="En françcais, il faut dure numérique"
+     *     message="En français, il faut dire numérique"
      * )
      */
     private $content;
