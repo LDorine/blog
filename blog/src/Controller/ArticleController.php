@@ -6,6 +6,7 @@ use App\Entity\Article;
 use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
 use App\Service\Slugify;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/article")
+ * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AUTHOR')")
  */
 class ArticleController extends AbstractController
 {
@@ -42,7 +44,7 @@ class ArticleController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $author = $article->setAuthor($this->getUser());
+            $article->setAuthor($this->getUser());
             $article->setSlug($slugify->generate($article->getTitle()));
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($article);
@@ -91,22 +93,26 @@ class ArticleController extends AbstractController
      */
     public function edit(Request $request, Article $article, Slugify $slugify): Response
     {
-        $form = $this->createForm(ArticleType::class, $article);
-        $form->handleRequest($request);
+        if ($article->getAuthor() === $this->getUser() || $this->isGranted("ROLE_ADMIN")) {
+            $form = $this->createForm(ArticleType::class, $article);
+            $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $article->setSlug($slugify->generate($article->getTitle()));
-            $this->getDoctrine()->getManager()->flush();
+            if ($form->isSubmitted() && $form->isValid()) {
+                $article->setSlug($slugify->generate($article->getTitle()));
+                $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('article_index', [
-                'id' => $article->getId(),
+                return $this->redirectToRoute('article_index', [
+                    'id' => $article->getId(),
+                ]);
+            }
+
+            return $this->render('article/edit.html.twig', [
+                'article' => $article,
+                'form' => $form->createView(),
             ]);
+        } else {
+            throw $this->createAccessDeniedException();
         }
-
-        return $this->render('article/edit.html.twig', [
-            'article' => $article,
-            'form' => $form->createView(),
-        ]);
     }
 
     /**

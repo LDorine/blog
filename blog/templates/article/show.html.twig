@@ -33,9 +33,11 @@
             <li>No tags for this article</li>
         {% endfor %}
     </ul>
-    <a href="{{ path('article_index') }}">back to list</a>
 
-    <a href="{{ path('article_edit', {'id': article.id}) }}">edit</a>
+    {% if is_granted('ROLE_AUTHOR') or is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('article_edit', { 'id': article.id} ) }}">Éditer</a>
+    {%endif%}
+    <a href="{{ path('article_index') }}">back to list</a>
 
     {{ include('article/_delete_form.html.twig') }}
 {% endblock %}
