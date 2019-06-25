@@ -14,8 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/article")
- * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AUTHOR')")
- */
+*/
 class ArticleController extends AbstractController
 {
     /**
@@ -32,6 +31,7 @@ class ArticleController extends AbstractController
 
     /**
      * @Route("/new", name="article_new", methods={"GET","POST"})
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AUTHOR')")
      * @param Request $request
      * @param Slugify $slugify
      * @param \Swift_Mailer $mailer
@@ -95,6 +95,7 @@ class ArticleController extends AbstractController
      * @param Article $article
      * @param Slugify $slugify
      * @return Response
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AUTHOR')")
      */
     public function edit(Request $request, Article $article, Slugify $slugify): Response
     {
@@ -122,6 +123,7 @@ class ArticleController extends AbstractController
             ]);
         } else {
             throw $this->createAccessDeniedException();
+
         }
     }
 
@@ -130,6 +132,7 @@ class ArticleController extends AbstractController
      * @param Request $request
      * @param Article $article
      * @return Response
+     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AUTHOR')")
      */
     public function delete(Request $request, Article $article): Response
     {
