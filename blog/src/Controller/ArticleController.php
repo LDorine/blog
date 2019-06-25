@@ -63,6 +63,11 @@ class ArticleController extends AbstractController
 
             $mailer->send($message);
 
+            $this->addFlash(
+                'alert-success',
+                'Action réussi !'
+            );
+
             return $this->redirectToRoute('article_index');
         }
 
@@ -106,6 +111,11 @@ class ArticleController extends AbstractController
                 ]);
             }
 
+            $this->addFlash(
+                'alert-success',
+                'Action réussi !'
+            );
+
             return $this->render('article/edit.html.twig', [
                 'article' => $article,
                 'form' => $form->createView(),
@@ -128,6 +138,11 @@ class ArticleController extends AbstractController
             $entityManager->remove($article);
             $entityManager->flush();
         }
+
+        $this->addFlash(
+            'alert-danger',
+            'Action réussi !'
+        );
 
         return $this->redirectToRoute('article_index');
     }

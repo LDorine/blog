@@ -29,6 +29,11 @@ class CategoryController extends AbstractController
             $insert->persist($data);
             $insert->flush();
 
+            $this->addFlash(
+                'alert-success',
+                'Action réussi !'
+            );
+
             $categories = $this->getDoctrine()
                 ->getRepository(Category::class)
                 ->findAll();
