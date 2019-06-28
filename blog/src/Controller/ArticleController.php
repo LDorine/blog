@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @Route("/article")
@@ -18,7 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ArticleController extends AbstractController
 {
     /**
-     * @Route("/index", name="article_index", methods={"GET"})
+     * @Route("/", name="article_index", methods={"GET"})
      * @param ArticleRepository $articleRepository
      * @return Response
      */
@@ -86,6 +87,7 @@ class ArticleController extends AbstractController
     {
         return $this->render('article/show.html.twig', [
             'article' => $article,
+            'isFavorite' => $this->getUser()->isFavorite($article),
         ]);
     }
 
@@ -148,5 +150,26 @@ class ArticleController extends AbstractController
         );
 
         return $this->redirectToRoute('article_index');
+    }
+
+    /**
+     * @Route("/{id}/favorite", name="article_favorite", methods={"GET","POST"})
+     * @param Article $article
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function favorite(Article $article)
+    {
+        $user = $this->getUser();
+        if ($user->getFavorite()->contains($article)) {
+            $user->removeFavorite($article);
+        } else {
+            $user->addFavorite($article);
+        }
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->json([
+            'isFavorite' => $this->getUser()->isFavorite($article)
+        ]);
     }
 }
